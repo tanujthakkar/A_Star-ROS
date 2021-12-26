@@ -1,0 +1,25 @@
+<launch>
+
+	<arg name="debug" default="false"/>
+	<arg name="gui" default="false"/>
+	<arg name="pause" default="false"/>
+	<arg name="world" value="$(find hybrid_astar)/world/hospital_04.world"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" default="$(arg world)"/>
+		<arg name="debug" value="$(arg debug)"/>
+		<arg name="gui" value="$(arg gui)"/>
+		<arg name="paused" value="$(arg pause)"/>
+		<arg name="use_sim_time" value="true"/>
+	</include>
+
+	<!-- Hospital -->
+	<node pkg="map_server" name="map_server" type="map_server" args="$(find hybrid_astar)/maps/hospital_04.yaml"/>
+
+	<!-- Hybrid A* -->
+	<node pkg="astar" type="astar" name="astar" output="screen" />
+
+	<arg name="config" default="visualization" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find astar)/rviz/$(arg config).rviz" />
+
+</launch>
